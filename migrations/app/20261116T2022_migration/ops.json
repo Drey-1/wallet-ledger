@@ -1,0 +1,677 @@
+[
+  {
+    "id": "dropConstraint.Transfer.Transfer_idempotencyKey_key",
+    "label": "Drop constraint \"Transfer_idempotencyKey_key\" on \"Transfer\"",
+    "operationClass": "widening",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Transfer_idempotencyKey_key",
+        "table": "Transfer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Transfer_idempotencyKey_key\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Transfer_idempotencyKey_key",
+          "public",
+          "\"public\".\"Transfer\""
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "constraint \"Transfer_idempotencyKey_key\" on \"Transfer\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop constraint \"Transfer_idempotencyKey_key\"",
+        "sql": "ALTER TABLE \"public\".\"Transfer\" DROP CONSTRAINT \"Transfer_idempotencyKey_key\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify constraint \"Transfer_idempotencyKey_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Transfer_idempotencyKey_key",
+          "public",
+          "\"public\".\"Transfer\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Transfer_idempotencyKey_key\" on \"Transfer\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.Account.currency",
+    "label": "Drop column \"currency\" from \"Account\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "currency",
+        "table": "Account"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"currency\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Account",
+          "currency"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"currency\" on \"Account\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"currency\"",
+        "sql": "ALTER TABLE \"public\".\"Account\" DROP COLUMN \"currency\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"currency\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Account",
+          "currency"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"currency\" on \"Account\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "dropColumn.Account.version",
+    "label": "Drop column \"version\" from \"Account\"",
+    "operationClass": "destructive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "version",
+        "table": "Account"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"version\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Account",
+          "version"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"version\" on \"Account\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "drop column \"version\"",
+        "sql": "ALTER TABLE \"public\".\"Account\" DROP COLUMN \"version\""
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"version\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Account",
+          "version"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"version\" on \"Account\""
+        }
+      }
+    ]
+  },
+  {
+    "id": "column.public.Account.isSystem",
+    "label": "Add column \"isSystem\" to \"Account\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "isSystem",
+        "table": "Account"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"isSystem\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Account",
+          "isSystem"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"isSystem\" on \"Account\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"isSystem\"",
+        "sql": "ALTER TABLE \"public\".\"Account\" ADD COLUMN \"isSystem\" bool DEFAULT false NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"isSystem\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Account",
+          "isSystem"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"isSystem\" on \"Account\""
+        }
+      },
+      {
+        "description": "verify column \"isSystem\" has type \"boolean\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "Account",
+          "isSystem",
+          "boolean"
+        ]
+      },
+      {
+        "description": "verify column \"isSystem\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "Account",
+          "isSystem",
+          "NO"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.Transfer.payloadHash",
+    "label": "Add column payloadHash to Transfer",
+    "summary": "Adds column payloadHash to table Transfer",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "table",
+        "name": "Transfer"
+      }
+    },
+    "operationClass": "additive",
+    "precheck": [
+      {
+        "description": "ensure column \"payloadHash\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "payloadHash"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"payloadHash\" on \"Transfer\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"payloadHash\"",
+        "sql": "ALTER TABLE \"public\".\"Transfer\" ADD COLUMN \"payloadHash\" text DEFAULT ('') NOT NULL"
+      },
+      {
+        "description": "drop temporary default from column \"payloadHash\"",
+        "sql": "ALTER TABLE \"public\".\"Transfer\" ALTER COLUMN \"payloadHash\" DROP DEFAULT"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"payloadHash\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "payloadHash"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"payloadHash\" on \"Transfer\""
+        }
+      },
+      {
+        "description": "verify column \"payloadHash\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "payloadHash",
+          "NO"
+        ]
+      },
+      {
+        "description": "verify column \"payloadHash\" has no default after temporary default removal",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"column_default\" IS NOT NULL)) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "payloadHash"
+        ]
+      },
+      {
+        "description": "verify column \"payloadHash\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "payloadHash",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "column.Transfer.userId",
+    "label": "Add column userId to Transfer",
+    "summary": "Adds column userId to table Transfer",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "column",
+        "name": "userId",
+        "table": "Transfer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure column \"userId\" is missing",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "userId"
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "column \"userId\" on \"Transfer\""
+        }
+      },
+      {
+        "description": "ensure table \"Transfer\" is empty before adding NOT NULL column without default",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"public\".\"Transfer\" LIMIT 1) AS \"result\"",
+        "params": [],
+        "meta": {
+          "requiredColumn": {
+            "table": "Transfer",
+            "column": "userId",
+            "reason": "newField"
+          }
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add column \"userId\"",
+        "sql": "ALTER TABLE \"public\".\"Transfer\" ADD COLUMN \"userId\" text NOT NULL"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify column \"userId\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3)) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "userId"
+        ],
+        "expectation": {
+          "expects": "present",
+          "object": "column \"userId\" on \"Transfer\""
+        }
+      },
+      {
+        "description": "verify column \"userId\" is NOT NULL",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"information_schema\".\"columns\" WHERE (\"table_schema\" = $1 AND \"table_name\" = $2 AND \"column_name\" = $3 AND \"is_nullable\" = $4)) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "userId",
+          "NO"
+        ]
+      },
+      {
+        "description": "verify column \"userId\" has type \"text\"",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_attribute\" AS \"a\" INNER JOIN \"pg_class\" AS \"c\" ON \"c\".\"oid\" = \"a\".\"attrelid\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"relnamespace\" WHERE (\"n\".\"nspname\" = $1 AND \"c\".\"relname\" = $2 AND \"a\".\"attname\" = $3 AND (format_type(\"a\".\"atttypid\", \"a\".\"atttypmod\")) = $4 AND NOT (\"a\".\"attisdropped\"))) AS \"result\"",
+        "params": [
+          "public",
+          "Transfer",
+          "userId",
+          "text"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.Account.balance_non_negative_7b8dd2b6",
+    "label": "Add check constraint \"balance_non_negative_7b8dd2b6\" on \"Account\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "balance_non_negative_7b8dd2b6",
+        "table": "Account"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"balance_non_negative_7b8dd2b6\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "balance_non_negative_7b8dd2b6",
+          "public",
+          "\"public\".\"Account\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"balance_non_negative_7b8dd2b6\" on \"Account\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"balance_non_negative_7b8dd2b6\"",
+        "sql": "ALTER TABLE \"public\".\"Account\" ADD CONSTRAINT \"balance_non_negative_7b8dd2b6\" CHECK (isSystem = true OR balance >=0)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"balance_non_negative_7b8dd2b6\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "balance_non_negative_7b8dd2b6",
+          "public",
+          "\"public\".\"Account\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.LedgerEntry.ledger_entry_amount_positive_2612d8b9",
+    "label": "Add check constraint \"ledger_entry_amount_positive_2612d8b9\" on \"LedgerEntry\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "ledger_entry_amount_positive_2612d8b9",
+        "table": "LedgerEntry"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"ledger_entry_amount_positive_2612d8b9\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "ledger_entry_amount_positive_2612d8b9",
+          "public",
+          "\"public\".\"LedgerEntry\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"ledger_entry_amount_positive_2612d8b9\" on \"LedgerEntry\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"ledger_entry_amount_positive_2612d8b9\"",
+        "sql": "ALTER TABLE \"public\".\"LedgerEntry\" ADD CONSTRAINT \"ledger_entry_amount_positive_2612d8b9\" CHECK (amount > 0)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"ledger_entry_amount_positive_2612d8b9\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "ledger_entry_amount_positive_2612d8b9",
+          "public",
+          "\"public\".\"LedgerEntry\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "checkConstraint.Transfer.transfer_amount_positive_2612d8b9",
+    "label": "Add check constraint \"transfer_amount_positive_2612d8b9\" on \"Transfer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "checkConstraint",
+        "name": "transfer_amount_positive_2612d8b9",
+        "table": "Transfer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"transfer_amount_positive_2612d8b9\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "transfer_amount_positive_2612d8b9",
+          "public",
+          "\"public\".\"Transfer\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"transfer_amount_positive_2612d8b9\" on \"Transfer\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add check constraint \"transfer_amount_positive_2612d8b9\"",
+        "sql": "ALTER TABLE \"public\".\"Transfer\" ADD CONSTRAINT \"transfer_amount_positive_2612d8b9\" CHECK (amount > 0)"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify check constraint \"transfer_amount_positive_2612d8b9\" exists",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4)) AS \"result\"",
+        "params": [
+          "transfer_amount_positive_2612d8b9",
+          "public",
+          "\"public\".\"Transfer\"",
+          "c"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "unique.Transfer.Transfer_idempotencyKey_userId_key",
+    "label": "Add unique constraint on \"Transfer\" (idempotencyKey, userId)",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "unique",
+        "name": "Transfer_idempotencyKey_userId_key",
+        "table": "Transfer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure constraint \"Transfer_idempotencyKey_userId_key\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Transfer_idempotencyKey_userId_key",
+          "public",
+          "\"public\".\"Transfer\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "constraint \"Transfer_idempotencyKey_userId_key\" on \"Transfer\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add unique constraint \"Transfer_idempotencyKey_userId_key\"",
+        "sql": "ALTER TABLE \"public\".\"Transfer\" ADD CONSTRAINT \"Transfer_idempotencyKey_userId_key\" UNIQUE (\"idempotencyKey\", \"userId\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify unique constraint \"Transfer_idempotencyKey_userId_key\" exists on (idempotencyKey, userId)",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb)) AS \"result\"",
+        "params": [
+          "Transfer_idempotencyKey_userId_key",
+          "public",
+          "\"public\".\"Transfer\"",
+          "u",
+          "[\"idempotencyKey\",\"userId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "index.Transfer.Transfer_userId_idx_a489d58a",
+    "label": "Create index \"Transfer_userId_idx_a489d58a\" on \"Transfer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "index",
+        "name": "Transfer_userId_idx_a489d58a",
+        "table": "Transfer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure index \"Transfer_userId_idx_a489d58a\" does not exist",
+        "sql": "SELECT (to_regclass($1)) IS NULL AS \"result\"",
+        "params": [
+          "\"public\".\"Transfer_userId_idx_a489d58a\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "index \"Transfer_userId_idx_a489d58a\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "create index \"Transfer_userId_idx_a489d58a\"",
+        "sql": "CREATE INDEX \"Transfer_userId_idx_a489d58a\" ON \"public\".\"Transfer\" (\"userId\")",
+        "params": []
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify index \"Transfer_userId_idx_a489d58a\" exists on \"Transfer\" with the planned definition",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_class\" AS \"c\" INNER JOIN \"pg_index\" AS \"i\" ON \"i\".\"indexrelid\" = \"c\".\"oid\" INNER JOIN \"pg_am\" AS \"m\" ON \"m\".\"oid\" = \"c\".\"relam\" WHERE (\"c\".\"oid\" = to_regclass($1) AND (\"c\".\"relkind\" = $2 OR \"c\".\"relkind\" = $3) AND \"i\".\"indrelid\" = to_regclass($4) AND NOT (\"i\".\"indisunique\") AND \"m\".\"amname\" = $5 AND (\"i\".\"indexprs\" IS NULL AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"i\".\"indkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"i\".\"indrelid\" AND key_attribute.attnum = key_column.attnum) = ($6)::jsonb) AND \"i\".\"indpred\" IS NULL)) AS \"result\"",
+        "params": [
+          "\"public\".\"Transfer_userId_idx_a489d58a\"",
+          "i",
+          "I",
+          "\"public\".\"Transfer\"",
+          "btree",
+          "[\"userId\"]"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "foreignKey.Transfer.Transfer_userId_fkey",
+    "label": "Add foreign key \"Transfer_userId_fkey\" on \"Transfer\"",
+    "operationClass": "additive",
+    "target": {
+      "id": "postgres",
+      "details": {
+        "schema": "public",
+        "objectType": "foreignKey",
+        "name": "Transfer_userId_fkey",
+        "table": "Transfer"
+      }
+    },
+    "precheck": [
+      {
+        "description": "ensure FK \"Transfer_userId_fkey\" does not exist",
+        "sql": "SELECT NOT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3))) AS \"result\"",
+        "params": [
+          "Transfer_userId_fkey",
+          "public",
+          "\"public\".\"Transfer\""
+        ],
+        "expectation": {
+          "expects": "absent",
+          "object": "FK \"Transfer_userId_fkey\" on \"Transfer\""
+        }
+      }
+    ],
+    "execute": [
+      {
+        "description": "add FK \"Transfer_userId_fkey\"",
+        "sql": "ALTER TABLE \"public\".\"Transfer\"\nADD CONSTRAINT \"Transfer_userId_fkey\"\nFOREIGN KEY (\"userId\")\nREFERENCES \"public\".\"User\" (\"id\")"
+      }
+    ],
+    "postcheck": [
+      {
+        "description": "verify FK \"Transfer_userId_fkey\" exists with the planned columns, referenced table and actions",
+        "sql": "SELECT EXISTS (SELECT 1 AS \"one\" FROM \"pg_constraint\" AS \"c\" INNER JOIN \"pg_namespace\" AS \"n\" ON \"n\".\"oid\" = \"c\".\"connamespace\" WHERE (\"c\".\"conname\" = $1 AND \"n\".\"nspname\" = $2 AND \"c\".\"conrelid\" = to_regclass($3) AND \"c\".\"contype\" = $4 AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"conkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"conrelid\" AND key_attribute.attnum = key_column.attnum) = ($5)::jsonb AND \"c\".\"confrelid\" = to_regclass($6) AND (SELECT coalesce(jsonb_agg(key_attribute.attname ORDER BY key_column.position), '[]'::jsonb) FROM unnest(\"c\".\"confkey\"::int2[]) WITH ORDINALITY AS key_column(attnum, position) JOIN pg_attribute key_attribute ON key_attribute.attrelid = \"c\".\"confrelid\" AND key_attribute.attnum = key_column.attnum) = ($7)::jsonb AND \"c\".\"confdeltype\" = $8 AND \"c\".\"confupdtype\" = $9)) AS \"result\"",
+        "params": [
+          "Transfer_userId_fkey",
+          "public",
+          "\"public\".\"Transfer\"",
+          "f",
+          "[\"userId\"]",
+          "\"public\".\"User\"",
+          "[\"id\"]",
+          "a",
+          "a"
+        ]
+      }
+    ]
+  }
+]
