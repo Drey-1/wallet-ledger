@@ -1,0 +1,62 @@
+// use prisma-8
+
+model User {
+  id           String    @id @onCreate(uuid())
+  email        String    @unique
+  passwordHash String
+  createdAt    DateTime  @default(now())
+  accounts     Account[]
+}
+
+model Account {
+  id        String        @id @onCreate(uuid())
+  userId    String
+  isSystem  Boolean       @default(false)
+  user      User          @relation(fields: [userId], references: [id])
+  balance   BigInt        @default(0) 
+  createdAt DateTime      @default(now())
+  entries   LedgerEntry[]
+
+  @@check(expression:sql`"isSystem" = true OR balance >=0`,name: "balance_non_negative")
+  @@index([userId])
+}
+
+model Transfer {
+  id             String        @id @onCreate(uuid())
+  userId         String
+  idempotencyKey String
+  payloadHash    String
+  user           User          @relation(fields: [userId], references: [id])        
+  amount         BigInt        
+  status         TransferStatus
+  createdAt      DateTime      @default(now())
+  entries        LedgerEntry[]
+
+  @@unique([userId, idempotencyKey])
+  @@check(expression:sql`amount > 0`,name: "transfer_amount_positive")
+}
+
+model LedgerEntry {
+  id         String    @id @onCreate(uuid())
+  accountId  String
+  account    Account   @relation(fields: [accountId], references: [id])
+  transferId String
+  transfer   Transfer  @relation(fields: [transferId], references: [id])
+  direction  Direction 
+  amount     BigInt   
+  createdAt  DateTime  @default(now())
+
+  @@check(expression:sql`amount > 0`,name: "ledger_entry_amount_positive")
+  @@index([transferId])
+  @@index([accountId, createdAt])
+}
+enum Direction {
+  @@type("pg/text@1")
+  Debit = "DEBIT"
+  Credit = "CREDIT"
+}
+enum TransferStatus {
+  @@type("pg/text@1")
+  Completed = "COMPLETED"
+  Failed = "FAILED"
+}
