@@ -20,7 +20,8 @@
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "types": [
-      "node"
+      "node",
+      "jest"
     ]
   }
 }
