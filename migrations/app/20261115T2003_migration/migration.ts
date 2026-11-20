@@ -1,6 +1,7 @@
 #!/usr/bin/env -S node
+import { pathToFileURL } from 'url';
 import type { Contract as End } from '../../snapshots/ea5b649ad95aa221948a56f7950eb923ffbfd2c0b2c3e85989de0d4f5e6827ec/contract.js';
-import endContract from '../../snapshots/ea5b649ad95aa221948a56f7950eb923ffbfd2c0b2c3e85989de0d4f5e6827ec/contract.json' with { type: 'json' };
+import endContract from '../../snapshots/ea5b649ad95aa221948a56f7950eb923ffbfd2c0b2c3e85989de0d4f5e6827ec/contract.json'
 import {
   Migration,
   MigrationCLI,
@@ -174,4 +175,4 @@ export default class M extends Migration<never, End> {
   }
 }
 
-MigrationCLI.run(import.meta.url, M);
+MigrationCLI.run(pathToFileURL(__filename).href, M);

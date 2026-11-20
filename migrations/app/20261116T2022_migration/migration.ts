@@ -1,8 +1,9 @@
 #!/usr/bin/env -S node
+import { pathToFileURL } from 'url';
 import type { Contract as End } from '../../snapshots/981fb116a0128433256b528776540efc657341977093838e33b73705c5ff5ee1/contract.js';
-import endContract from '../../snapshots/981fb116a0128433256b528776540efc657341977093838e33b73705c5ff5ee1/contract.json' with { type: 'json' };
+import endContract from '../../snapshots/981fb116a0128433256b528776540efc657341977093838e33b73705c5ff5ee1/contract.json' 
 import type { Contract as Start } from '../../snapshots/ea5b649ad95aa221948a56f7950eb923ffbfd2c0b2c3e85989de0d4f5e6827ec/contract.js';
-import startContract from '../../snapshots/ea5b649ad95aa221948a56f7950eb923ffbfd2c0b2c3e85989de0d4f5e6827ec/contract.json' with { type: 'json' };
+import startContract from '../../snapshots/ea5b649ad95aa221948a56f7950eb923ffbfd2c0b2c3e85989de0d4f5e6827ec/contract.json'
 import { Migration, MigrationCLI, col, lit, sql } from '@prisma/orm-postgres/migration';
 
 export default class M extends Migration<Start, End> {
@@ -83,4 +84,4 @@ export default class M extends Migration<Start, End> {
   }
 }
 
-MigrationCLI.run(import.meta.url, M);
+MigrationCLI.run(pathToFileURL(__filename).href, M);
