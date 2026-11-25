@@ -50,6 +50,19 @@
                 "value": "FAILED"
               }
             ]
+          },
+          "UserRole": {
+            "codecId": "pg/text@1",
+            "members": [
+              {
+                "name": "User",
+                "value": "USER"
+              },
+              {
+                "name": "System",
+                "value": "SYSTEM"
+              }
+            ]
           }
         },
         "models": {
@@ -416,6 +429,19 @@
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
+              },
+              "role": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                },
+                "valueSet": {
+                  "entityKind": "enum",
+                  "entityName": "UserRole",
+                  "namespaceId": "public",
+                  "plane": "domain"
+                }
               }
             },
             "relations": {
@@ -448,6 +474,9 @@
                 },
                 "passwordHash": {
                   "column": "passwordHash"
+                },
+                "role": {
+                  "column": "role"
                 }
               },
               "namespaceId": "public",
@@ -792,6 +821,13 @@
               ]
             },
             "User": {
+              "checks": [
+                {
+                  "expression": "\"role\" IN ('USER', 'SYSTEM')",
+                  "name": "User_role_check_12f57f64",
+                  "prefix": "User_role_check"
+                }
+              ],
               "columns": {
                 "createdAt": {
                   "codecId": "pg/timestamptz-date@1",
@@ -819,6 +855,21 @@
                   "codecId": "pg/text@1",
                   "dataType": "pg/text",
                   "nullable": false
+                },
+                "role": {
+                  "codecId": "pg/text@1",
+                  "dataType": "pg/text",
+                  "default": {
+                    "kind": "literal",
+                    "value": "USER"
+                  },
+                  "nullable": false,
+                  "valueSet": {
+                    "entityKind": "valueSet",
+                    "entityName": "UserRole",
+                    "namespaceId": "public",
+                    "plane": "storage"
+                  }
                 }
               },
               "foreignKeys": [],
@@ -851,6 +902,13 @@
                 "COMPLETED",
                 "FAILED"
               ]
+            },
+            "UserRole": {
+              "kind": "valueSet",
+              "values": [
+                "USER",
+                "SYSTEM"
+              ]
             }
           }
         },
@@ -858,7 +916,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "16deee1c4b2b95c47c8b1b236e563463e1c41ebfd1f7e8581c5933cbdbeedcc8"
+    "storageHash": "85dc89d20fb8aadbc3d9a5d0add0db79eb5e29c30d9205792eb965090e770473"
   },
   "execution": {
     "executionHash": "01ca50a4f4da52d07796f4fe1e984ed79da926968ff47f0ca6d3803995bc91ab",
