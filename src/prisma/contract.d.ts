@@ -23,7 +23,7 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'16deee1c4b2b95c47c8b1b236e563463e1c41ebfd1f7e8581c5933cbdbeedcc8'>;
+  StorageHashBase<'85dc89d20fb8aadbc3d9a5d0add0db79eb5e29c30d9205792eb965090e770473'>;
 export type ExecutionHash =
   ExecutionHashBase<'01ca50a4f4da52d07796f4fe1e984ed79da926968ff47f0ca6d3803995bc91ab'>;
 export type ProfileHash =
@@ -290,6 +290,9 @@ type FieldTypeOverrides = {
           readonly input: 'COMPLETED' | 'FAILED';
         };
       };
+      readonly User: {
+        readonly role: { readonly output: 'USER' | 'SYSTEM'; readonly input: 'USER' | 'SYSTEM' };
+      };
     };
   };
 };
@@ -322,6 +325,9 @@ type ColumnTypeOverrides = {
         readonly output: 'COMPLETED' | 'FAILED';
         readonly input: 'COMPLETED' | 'FAILED';
       };
+    };
+    readonly User: {
+      readonly role: { readonly output: 'USER' | 'SYSTEM'; readonly input: 'USER' | 'SYSTEM' };
     };
   };
 };
@@ -379,6 +385,7 @@ export namespace Models {
     email: FieldOutputTypes['public']['User']['email'];
     id: FieldOutputTypes['public']['User']['id'];
     passwordHash: FieldOutputTypes['public']['User']['passwordHash'];
+    role: FieldOutputTypes['public']['User']['role'];
     accounts: public_Account[];
     readonly [RelationKeys]?: 'accounts';
   };
@@ -669,6 +676,16 @@ type ContractBase = Omit<
                   readonly nullable: false;
                   readonly many: false;
                 };
+                readonly role: {
+                  readonly dataType: 'pg/text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                  readonly default: {
+                    readonly kind: 'literal';
+                    readonly value: DefaultLiteralValue<'pg/text@1', 'USER'>;
+                  };
+                  readonly many: false;
+                };
               };
               primaryKey: { readonly columns: readonly ['id'] };
               uniques: readonly [{ readonly columns: readonly ['email'] }];
@@ -684,6 +701,10 @@ type ContractBase = Omit<
             readonly TransferStatus: {
               readonly kind: 'valueSet';
               readonly values: readonly ['COMPLETED', 'FAILED'];
+            };
+            readonly UserRole: {
+              readonly kind: 'valueSet';
+              readonly values: readonly ['USER', 'SYSTEM'];
             };
           };
         };
@@ -932,6 +953,10 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
+              readonly role: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
             };
             readonly relations: {
               readonly accounts: {
@@ -954,6 +979,7 @@ type ContractBase = Omit<
                 readonly email: { readonly column: 'email' };
                 readonly id: { readonly column: 'id' };
                 readonly passwordHash: { readonly column: 'passwordHash' };
+                readonly role: { readonly column: 'role' };
               };
             };
           };
@@ -973,6 +999,13 @@ type ContractBase = Omit<
               { readonly name: 'Failed'; readonly value: 'FAILED' },
             ];
           };
+          readonly UserRole: {
+            readonly codecId: 'pg/text@1';
+            readonly members: readonly [
+              { readonly name: 'User'; readonly value: 'USER' },
+              { readonly name: 'System'; readonly value: 'SYSTEM' },
+            ];
+          };
         };
         readonly enumMemberTypes?: {
           readonly Direction: readonly [
@@ -982,6 +1015,10 @@ type ContractBase = Omit<
           readonly TransferStatus: readonly [
             { readonly name: 'Completed'; readonly value: 'COMPLETED' },
             { readonly name: 'Failed'; readonly value: 'FAILED' },
+          ];
+          readonly UserRole: readonly [
+            { readonly name: 'User'; readonly value: 'USER' },
+            { readonly name: 'System'; readonly value: 'SYSTEM' },
           ];
         };
       };
